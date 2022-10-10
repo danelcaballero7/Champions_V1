@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link href="{% static 'bootstrap-5.2.1-dist/css/bootstrap.min.css'%}" rel="stylesheet">
+    <link href="{% static 'style/style.css'%}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+
+<body>
+
+<!-- Navbar-->
+
+<!-- Navbar end-->
+
+<h1>Players</h1>
+<br>
+<button type="button" class="btn btn-primary"data-bs-toggle="modal" data-bs-target="#exampleModal_Add">Add Player</button>
+<br>
+<br>
+<!--- Tabla ---->
+<table class="table table-dark">
+    <thead>
+
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Age</th>
+        <th scope="col"></th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for player in players %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ player.name }}</td>
+            <td>{{ player.last_name }}</td>
+            <td>{{ player.age }}</td>
+            <td>
+            <td>
+                <button type="button" class="btn btn-info " data-bs-toggle="modal" data-bs-target="#editModal{{ forloop.counter }}" data-bs-whatever="@getbootstrap">Edit</button>
+            </td>
+
+            <!-- Modal Delete -->
+
+            <div class="modal fade" id="editModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Player</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="update_player/{{ player.id }}" method="post">{% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="name-update" class="col-form-label">Name:</label>
+                                    <input type="text" class="form-control" id="name-update" name="{{ form.name.name }}" value="{{ player.name }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="last_name-update" class="col-form-label">Last Name:</label>
+                                    <input type="text" class="form-control" id="last_name-update" name="{{ form.last_name.name }}" value="{{ player.last_name }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="age-update" class="col-form-label">Age:</label>
+                                    <input type="text" class="form-control" id="age-update" name="{{ form.age.name }}" value="{{ player.age }}">
+                                </div>
+
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <td>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal_Delete{{ forloop.counter }}">Delete</button>
+            </td>
+
+            <!-- Modal Delete -->
+
+            <div class="modal fade " id="exampleModal_Delete{{ forloop.counter }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Player</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to remove: {{ player.name }}</p>
+                        </div>
+                        <form action="{% url 'delete' player.id  %}" method="post">{% csrf_token %}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Modal Add -->
+
+<div class="modal fade " id="exampleModal_Add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Player</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'add' %}" method="POST"> {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name-add" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name-add" name="{{ form.name.name }}" placeholder="name.." >
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name-add" class="col-form-label">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name-add" name="{{ form.last_name.name }}" placeholder="last name..">
+                    </div>
+                    <div class="mb-3">
+                        <label for="age-add" class="col-form-label">Age:</label>
+                        <input type="text" class="form-control" id="age-add" name="{{ form.age.name }}"placeholder="age.." >
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'bootstrap-5.2.1-dist/js/bootstrap.min.js' %}"></script>
+</div>
+<footer>
+
+</footer>
+</body>
+</html>
